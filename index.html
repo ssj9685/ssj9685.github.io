@@ -2,17 +2,73 @@
     <head>
         <title>개발자 공부 블로그</title>
         <link rel="icon" type="image/png" sizes="16x16" href="static/img/favicon.png">
+        <style>
+            html,body{
+                padding:0;
+                margin:0;
+                font-size: 10px;
+                overflow: hidden;
+            }
+            .mainGrid{
+                position: relative;
+                height:100%;
+                display: grid;
+                font-size: 1.6rem;
+                color:rgb(50,80,69);
+                font-weight: bold;
+                font-family: Helvetica;
+                grid-template-columns: min-content 1fr;
+                background-color: rgba(50,80,69,0.1);
+            }
+            #sidebarToggleButton{
+                position: absolute;
+                left: 15rem;
+                top:50%;
+                transition: transform 0.25s;
+                background-color: transparent;
+                border:none;
+            }
+            #sidebarToggleButton:focus{
+                outline:none;
+            }
+            #sidebarToggleButton.sidebarClosed{
+                transform: translateX(-18rem)rotateY(-180deg);
+            }
+            #sidebarToggleButton.sidebarClosed:hover{
+                transform: translateX(-16rem)rotateY(-180deg);
+            }
+            #sidebar.sidebarClosed{
+                width:0px;
+            }
+            #sidebar{
+                width:20rem;
+                background-color: rgba(50,80,69,0.3);
+                overflow: hidden;
+                word-break: break-all;
+                white-space: nowrap;
+                transition: width 0.25s;
+            }
+        </style>
+        <script>
+            window.addEventListener('load',()=>{
+                sidebarToggleButton.addEventListener('click',()=>{
+                    sidebar.classList.toggle('sidebarClosed');
+                    sidebarToggleButton.classList.toggle('sidebarClosed');
+                })
+            })
+        </script>
     </head>
     <body>
-        <div>
-            헤더
-        </div>
-        <div>
-            <div>메인</div>
-            <div>사이드바</div>
-        </div>
-        <div>
-            푸터
+        <div class="mainGrid">
+            <div id="sidebar">
+                <div>개발자 공부 블로그</div>
+                <div></div>
+            </div>
+            <div>
+                <div>본문제목</div>
+                <div>본문</div>
+            </div>
+            <button id="sidebarToggleButton"><img src="static/img/arrow.png" alt="arrow"/></button>
         </div>
     </body>
 </html>

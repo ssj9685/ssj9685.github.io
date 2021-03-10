@@ -12,5 +12,5 @@ window.addEventListener('load',()=>{
         indexElement.setAttribute('length', '100');
         indexElement.setAttribute('color', 'var(--birthColor)');
         customElementTestDiv.appendChild(indexElement);
-    })
+    }) 
 })

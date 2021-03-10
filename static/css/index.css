@@ -57,6 +57,7 @@ html,body{
     transition: width 0.25s;
     display: grid;
     grid-template-rows: min-content 1fr;
+    overflow: auto;
 }
 #homeLink{
     padding:1.6rem;
@@ -77,6 +78,7 @@ html,body{
 }
 #mainContent{
     display:grid;
+    height: 100vh;
     grid-template-rows: min-content 1fr;
 }
 #mainContentTitle{
@@ -86,4 +88,5 @@ html,body{
 #mainContentText{
     padding:0.8rem;
     white-space: pre-line;
+    overflow: auto;
 }

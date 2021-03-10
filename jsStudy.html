@@ -3,6 +3,7 @@
         <title>개발자 공부 블로그</title>
         <link rel="icon" type="image/png" sizes="16x16" href="static/img/favicon.png">
         <link rel="stylesheet" href="static/css/index.css">
+        <script src="static/js/indexElement.js"></script>
         <script src="static/js/index.js"></script>
     </head>
     <body>
@@ -21,12 +22,23 @@
                     Javascript
                 </div>
                 <div id="mainContentText">
-                    20210204
-                    
-                    자바스크립트 공부하자.
-                    html 파싱후에 대체하는 방법 연구.
-                    주소에 직접 파일로 접근하지말고 내가 정해준 주소로 갔을 때 해당 화면 랜더링하는 방식으로 변경
-                    번외로 서비스 워커, WebRTC에 대해 공부하자
+                    <div>
+                        20210204
+                        
+                        자바스크립트 공부하자.
+                        html 파싱후에 대체하는 방법 연구.
+                        주소에 직접 파일로 접근하지말고 내가 정해준 주소로 갔을 때 해당 화면 랜더링하는 방식으로 변경
+                        번외로 서비스 워커, WebRTC에 대해 공부하자
+                    </div>
+                    <div id="customElementTestDiv">
+                        20210311
+
+                        커스텀 엘리먼트 공부
+                        기본적인 Shadow root 기능을 실습하였다.
+                        이걸 활용해서 head부분에 들어가는 리소스들도 공통으로 묶어서 관리할 수 있다고 생각한다.
+                        또한 로컬 환경에서의 CORS 해결 방안도 프로토콜 측면에서 모색해볼 것이다.
+                        <button id="addButton">커스텀엘리먼트추가</button>
+                    </div>
                 </div>
             </div>
             <button id="sidebarToggleButton"><img src="static/img/arrow.png" alt="arrow"/></button>

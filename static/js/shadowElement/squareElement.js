@@ -1,4 +1,4 @@
-class IndexElement extends HTMLElement{
+class SquareElement extends HTMLElement{
     static get observedAttributes() {
         return ['color', 'length'];
     }
@@ -14,21 +14,21 @@ class IndexElement extends HTMLElement{
         shadow.appendChild(div);
     }
     connectedCallback() {
-        console.log('Custom square element added to page.');
+        
         this.updateStyle();
     }
 
     disconnectedCallback() {
-        console.log('Custom square element removed from page.');
+        
     }
 
     adoptedCallback() {
-        console.log('Custom square element moved to new page.');
+        
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         console.log(name, oldValue, newValue);
-        console.log('Custom square element attributes changed.');
+        
         this.updateStyle();
     }
     updateStyle(){
@@ -41,4 +41,5 @@ class IndexElement extends HTMLElement{
         `;
     }
 }
-customElements.define('index-element', IndexElement);
+customElements.define('square-element', SquareElement);
+unscripter("shadowElement/squareElement.js");

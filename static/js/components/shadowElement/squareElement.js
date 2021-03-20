@@ -42,4 +42,3 @@ class SquareElement extends HTMLElement{
     }
 }
 customElements.define('square-element', SquareElement);
-unscripter("shadowElement/squareElement.js");

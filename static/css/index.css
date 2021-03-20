@@ -43,9 +43,11 @@ html,body{
     outline:none;
 }
 #sidebarToggleButton.sidebarClosed{
+    opacity: 0.1;
     transform: translateX(-18rem)rotateY(-180deg);
 }
 #sidebarToggleButton.sidebarClosed:hover{
+    opacity: 1;
     transform: translateX(-17.5rem)rotateY(-180deg);
 }
 #sidebar.sidebarClosed{

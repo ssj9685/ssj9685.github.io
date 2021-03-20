@@ -1,14 +1,13 @@
 window.addEventListener('DOMContentLoaded', () => {
-    scripter("actions/sidebarToggle.js");
-    scripter("actions/pageSwitch.js");
-    scripter("pages/indexPage.js");
-    scripter("pages/jsStudyPage.js");
-    scripter("pages/batchStudyPage.js");
-    scripter("shadowElement/squareElement.js");
-    scripter("workers/multiplyWorker.js");
+    scripter("actions/sidebarActions.js");
+    scripter("actions/componentActions.js");
+    scripter("services/workerService.js");
+    scripter("services/webRTCService.js");
 })
 
-window.addEventListener('load',()=>{
-    pageSwitch.switchHandler();
-    sidebarToggle.sidebarToggleBtnEventHandler();
+window.addEventListener('load', ()=>{
+    this.componentActions = new ComponentActions();
+    this.sidebarActions  = new SidebarActions();
+    this.workerService = new WorkerService();
+    this.webRtcService =  new WebRTCService();
 })

@@ -1,3 +1,5 @@
+scripter("components/shadowElement/squareElement.js");
+
 class JsStudyPage extends HTMLElement{
     static get observedAttributes() {
         return [];
@@ -41,7 +43,7 @@ class JsStudyPage extends HTMLElement{
                     기본적인 Shadow root 기능을 실습하였다.
                     이걸 활용해서 head부분에 들어가는 리소스들도 공통으로 묶어서 관리할 수 있다고 생각한다.
                     또한 로컬 환경에서의 CORS 해결 방안도 프로토콜 측면에서 모색해볼 것이다.
-                    <button id="addButton">커스텀엘리먼트추가</button>
+                    <button id="customElementAddButton">커스텀엘리먼트추가</button>
                 </div>
                 <div>
                     20210317
@@ -61,40 +63,45 @@ class JsStudyPage extends HTMLElement{
                     쓰레드와 비슷한 개념으로 작업을 던져놓고 기존 작업을 다시 진행할 수 있어서 효율적인 기술이다.
                     <input type="text" id="firstMulNum" value="0">
                     <input type="text" id="secondMulNum" value="0">
-                    <div id="workerMultiplyResult"></div>
+                    <div id="workerMultiplyResult">
+                </div>
+                <div>
+                    20210320
+
+                    전반적인 코드 리펙토링 및 webRTC 실습을 진행하였다.
+                    현재는 local에 두 개의 peer를 연결했다.
+                    더 나아가 stun, turn 서버를 구축하고 외부 주소와 peer를 연결하는 실습을 진행할 것이다.
+                    <div>
+                        <style>
+                            video{
+                                --width:45%;
+                                width:var(--width);
+                                height:calc(var(--width) * 0.75);
+                            }
+                            .flexAround{
+                                display:flex;
+                                justify-content:space-around;
+                            }
+                        </style>
+                        <div class="flexAround">
+                            <video id="webRtcLocalVideo" playsinline autoplay muted></video>
+                            <video id="webRtcRemoteVideo" playsinline autoplay></video>
+                        </div>
+                        <div style="display:flex;">
+                            <button id="webRtcStartButton">Start</button>
+                            <button id="webRtcCallButton">Call</button>
+                            <button id="webRtcHangupButton">Hang Up</button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         `
         shadow.appendChild(style);
         shadow.appendChild(div);
-        const addButton = shadow.getElementById("addButton");
-        const customElementTestDiv = shadow.getElementById("customElementTestDiv");
-        addButton.addEventListener('click', ()=>{
-            const indexElement = document.createElement('square-element');
-            indexElement.setAttribute('length', '100');
-            indexElement.setAttribute('color', 'var(--birthColor)');
-            customElementTestDiv.appendChild(indexElement);
-        })
-        if (window.Worker) {
-            const myWorker = new Worker(multiplyWorker.onmessage);
-
-            const firstMulNum = shadow.getElementById('firstMulNum');
-            const secondMulNum = shadow.getElementById('secondMulNum');
-            const workerMultiplyResult = shadow.getElementById("workerMultiplyResult");
-
-            firstMulNum.addEventListener('change', () => {
-              myWorker.postMessage([firstMulNum.value, secondMulNum.value]);
-            })
-            secondMulNum.addEventListener('change', () => {
-              myWorker.postMessage([firstMulNum.value, secondMulNum.value]);
-            })
-    
-            myWorker.addEventListener('message',e => {
-                workerMultiplyResult.textContent = e.data;
-            })
-        }
-        else {
-            console.log('not supported');
-        }
+        this.customElementAddHandler();
+        this.workerHandler();
+        this.webRtcHandler();
     }
     connectedCallback() {
         
@@ -111,6 +118,54 @@ class JsStudyPage extends HTMLElement{
     attributeChangedCallback(name, oldValue, newValue) {
         
     }
+
+    customElementAddHandler = () => {
+        const shadow = this.getShadow();
+        const customElementAddButton = shadow.getElementById("customElementAddButton");
+        const customElementTestDiv = shadow.getElementById("customElementTestDiv");
+        customElementAddButton.addEventListener('click', ()=>{
+            const indexElement = document.createElement('square-element');
+            indexElement.setAttribute('length', '100');
+            indexElement.setAttribute('color', 'var(--birthColor)');
+            customElementTestDiv.appendChild(indexElement);
+        })
+    }
+
+    workerHandler = () => {
+        const shadow = this.getShadow();
+        if (window.Worker) {
+            const multiplyWorker = window.workerService.multiplyWorker;
+
+            const firstMulNum = shadow.getElementById('firstMulNum');
+            const secondMulNum = shadow.getElementById('secondMulNum');
+            const workerMultiplyResult = shadow.getElementById("workerMultiplyResult");
+
+            firstMulNum.addEventListener('change', () => {
+              multiplyWorker.postMessage([firstMulNum.value, secondMulNum.value]);
+            })
+            secondMulNum.addEventListener('change', () => {
+              multiplyWorker.postMessage([firstMulNum.value, secondMulNum.value]);
+            })
+    
+            multiplyWorker.addEventListener('message',e => {
+                workerMultiplyResult.textContent = e.data;
+            })
+        }
+        else {
+            console.log('not supported');
+        }
+    }
+
+    webRtcHandler = () => {
+        const shadow = this.getShadow();
+        const webRtc = window.webRtcService;
+        const webRtcStartButton = shadow.getElementById('webRtcStartButton');
+		const webRtcCallButton = shadow.getElementById('webRtcCallButton');
+		const webRtcHangupButton = shadow.getElementById('webRtcHangupButton');
+		const webRtcLocalVideo = shadow.getElementById('webRtcLocalVideo');
+		const webRtcRemoteVideo = shadow.getElementById('webRtcRemoteVideo');
+        webRtcStartButton.addEventListener('click', ()=>webRtc.localVideoStart(webRtcLocalVideo));
+        webRtcCallButton.addEventListener('click', ()=>webRtc.callToRemotePeer(webRtcRemoteVideo));
+        webRtcHangupButton.addEventListener('click', webRtc.closeAllPeerConnection);
+    }
 }
-customElements.define('jsstudy-page', JsStudyPage);
-unscripter("pages/jsStudyPage.js");

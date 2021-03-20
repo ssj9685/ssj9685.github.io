@@ -7,6 +7,9 @@ const scripter = path => {
 		module.src = staticFilePath + path;
 		document.body.appendChild(module);
 	}
+	window.addEventListener('load',()=>{
+		unscripter(path);
+	})
 }
 
 const unscripter = path => {

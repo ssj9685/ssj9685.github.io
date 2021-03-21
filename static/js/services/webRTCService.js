@@ -29,6 +29,11 @@ class WebRTCService{
 	}
 
 	initCallWithVideo = (video, configuration) => {
+		/**
+		 * 1. Create local and remote peers
+		 * 2. Add some datas(ex. track, stream... etc)
+		 * 3. Create Offer with 2's data and answer with them
+		 */
 		let local, remote;
 		[local, remote] = this.createLocalAndRemotePeer(configuration);
 		remote.addEventListener('track', e=>this.onAddTrack(e,video));

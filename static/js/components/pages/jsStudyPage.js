@@ -71,6 +71,12 @@ class JsStudyPage extends HTMLElement{
                     전반적인 코드 리펙토링 및 webRTC 실습을 진행하였다.
                     현재는 local에 두 개의 peer를 연결했다.
                     더 나아가 stun, turn 서버를 구축하고 외부 주소와 peer를 연결하는 실습을 진행할 것이다.
+
+                    20210322
+
+                    Multiple peer connection을 실습하였다.
+                    이에 따라 좀 더 효율적으로 리팩토링을 진행하였다.
+                    전체적인 peer connection의 생성과 동작을 일반화하였다.
                     <div>
                         <style>
                             video{

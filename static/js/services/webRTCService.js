@@ -1,8 +1,12 @@
 class WebRTCService{
 	constructor(){
 		this.localStream = null;
-		this.pc1 = null;
-		this.pc2 = null;
+		this.pcLocal = null;
+		this.pcRemote = null;
+		this.pcLocal2 = null;
+		this.pcRemote2 = null;
+		this.peerConnectionDatas = {};
+		this.webRtcPeers = [];
 	}
 	
 	localVideoStart = localVideo => {
@@ -18,50 +22,58 @@ class WebRTCService{
 		});
 	}
 	
-	callToRemotePeer = remoteVideo => {
+	callToRemotePeer = videoElements => {
 		const configuration = {};
-		this.pc1 = new RTCPeerConnection(configuration);
-		this.pc1.addEventListener('icecandidate', this.onIceCandidate);
-		this.pc2 = new RTCPeerConnection(configuration);
-		this.pc2.addEventListener('icecandidate', this.onIceCandidate);
-        this.gotRemoteStream = e => {
-            if (remoteVideo.srcObject !== e.streams[0]) {
-                remoteVideo.srcObject = e.streams[0];
-            }
-        }
-		this.pc2.addEventListener('track', this.gotRemoteStream);
-		this.localStream.getTracks()
-		.forEach(track => this.pc1.addTrack(track, this.localStream));
-		this.pc1.createOffer(
-			{
-				offerToReceiveAudio: 1,
-				offerToReceiveVideo: 1
-			}
-		)
-		.then(offer=>this.onCreateOffer(offer));
+		this.initCallWithVideo(videoElements.webRtcRemoteVideo, configuration);
+		this.initCallWithVideo(videoElements.webRtcRemoteVideo2, configuration);
 	}
-	
-	onCreateOffer = desc => {
-		this.pc1.setLocalDescription(desc);
-		this.pc2.setRemoteDescription(desc);
-		this.pc2.createAnswer()
-		.then(desc=>{
-			this.pc2.setLocalDescription(desc);
-			this.pc1.setRemoteDescription(desc);
+
+	initCallWithVideo = (video, configuration) => {
+		let local, remote;
+		[local, remote] = this.createLocalAndRemotePeer(configuration);
+		remote.addEventListener('track', e=>this.onAddTrack(e,video));
+		this.localStream.getTracks()
+		.forEach(track => {
+			local.addTrack(track, this.localStream);
+		});
+		this.createOfferAndAnswer(local, remote);
+	}
+
+	createLocalAndRemotePeer = (configuration) => {
+		const local = new RTCPeerConnection(configuration);
+		local.addEventListener('icecandidate', e=>e.candidate?remote.addIceCandidate(e.candidate):null);
+		const remote = new RTCPeerConnection(configuration);
+		remote.addEventListener('icecandidate', e=>e.candidate?local.addIceCandidate(e.candidate):null);
+		this.webRtcPeers.push({local:local, remote:remote})
+		return [local, remote];
+	}
+
+	createOfferAndAnswer = (local,remote) => {
+		local.createOffer()
+		.then(desc => {
+			local.setLocalDescription(desc);
+			remote.setRemoteDescription(desc);
+		})
+		.then(() => {
+			remote.createAnswer()
+			.then(desc => {
+				local.setRemoteDescription(desc);
+				remote.setLocalDescription(desc);
+			});
 		});
 	}
-	
-	onIceCandidate = e => {
-		if(e.candidate){
-			const otherPc = (e.target === this.pc1) ? this.pc2 : this.pc1
-			otherPc.addIceCandidate(e.candidate);
+
+	onAddTrack = (e,video) => {
+		if (video.srcObject !== e.streams[0]) {
+			video.srcObject = e.streams[0];
 		}
 	}
 	
 	closeAllPeerConnection = () => {
-		this.pc1.close();
-		this.pc2.close();
-		this.pc1 = null;
-		this.pc2 = null;
+		this.webRtcPeers.forEach(peer => {
+			peer.local.close();
+			peer.remote.close();
+		})
+		this.webRtcPeers = [];
 	}
 }

@@ -74,7 +74,7 @@ class JsStudyPage extends HTMLElement{
                     <div>
                         <style>
                             video{
-                                --width:45%;
+                                --width:33%;
                                 width:var(--width);
                                 height:calc(var(--width) * 0.75);
                             }
@@ -86,6 +86,7 @@ class JsStudyPage extends HTMLElement{
                         <div class="flexAround">
                             <video id="webRtcLocalVideo" playsinline autoplay muted></video>
                             <video id="webRtcRemoteVideo" playsinline autoplay></video>
+                            <video id="webRtcRemoteVideo2" playsinline autoplay muted></video>
                         </div>
                         <div style="display:flex;">
                             <button id="webRtcStartButton">Start</button>
@@ -164,8 +165,13 @@ class JsStudyPage extends HTMLElement{
 		const webRtcHangupButton = shadow.getElementById('webRtcHangupButton');
 		const webRtcLocalVideo = shadow.getElementById('webRtcLocalVideo');
 		const webRtcRemoteVideo = shadow.getElementById('webRtcRemoteVideo');
+        const webRtcRemoteVideo2 = shadow.getElementById('webRtcRemoteVideo2');
+        const videoElements = {
+            "webRtcRemoteVideo":webRtcRemoteVideo,
+            "webRtcRemoteVideo2":webRtcRemoteVideo2
+        };
         webRtcStartButton.addEventListener('click', ()=>webRtc.localVideoStart(webRtcLocalVideo));
-        webRtcCallButton.addEventListener('click', ()=>webRtc.callToRemotePeer(webRtcRemoteVideo));
+        webRtcCallButton.addEventListener('click', ()=>webRtc.callToRemotePeer(videoElements));
         webRtcHangupButton.addEventListener('click', webRtc.closeAllPeerConnection);
     }
 }

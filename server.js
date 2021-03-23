@@ -36,12 +36,21 @@ function route(req, res){
 					res.writeHead(200, {'Content-Type': mimeLookup[extName]});
 					fs.createReadStream('.' + url).pipe(res);
 				}
+				else{
+					res.writeHead(404, {'Content-Type': 'text/html'});
+					res.end("404 page not found");
+				}
 				break;
 		}
 	}
 	else if(method === 'POST'){
 
 	}
-	
 }
 //method url callback의 형태로 추가할 수 있는 함수구현
+
+const http = require('http');
+http.createServer((req, res) => {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80);

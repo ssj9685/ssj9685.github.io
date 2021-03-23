@@ -1,9 +1,7 @@
-window.addEventListener('DOMContentLoaded', () => {
-    scripter("actions/sidebarActions.js");
-    scripter("actions/componentActions.js");
-    scripter("services/workerService.js");
-    scripter("services/webRTCService.js");
-})
+scripter("actions/sidebarActions.js");
+scripter("actions/componentActions.js");
+scripter("services/workerService.js");
+scripter("services/webRTCService.js");
 
 window.addEventListener('load', ()=>{
     this.componentActions = new ComponentActions();

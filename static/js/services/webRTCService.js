@@ -1,71 +1,88 @@
 class WebRTCService{
 	constructor(){
 		this.localStream = null;
-		this.pcLocal = null;
-		this.pcRemote = null;
-		this.pcLocal2 = null;
-		this.pcRemote2 = null;
-		this.peerConnectionDatas = {};
-		this.webRtcPeers = [];
+		this.webRtcPeers = new Map();
+		this.outBoundPeers = new Map();
 	}
 	
-	localVideoStart = localVideo => {
-		navigator.mediaDevices.getUserMedia(
-			{
-				audio: true,
-				video: true
-			}
-		)
-		.then(stream => {
-            localVideo.srcObject = stream;
-            this.localStream = stream;
-		});
+	setLocalStream = () => {
+		if(!this.localStream){
+			return navigator.mediaDevices.getUserMedia(
+				{
+					audio: true,
+					video: true
+				}
+			)
+			.then(stream => {
+				this.localStream = stream;
+			});
+		}
 	}
 	
 	callToRemotePeer = videoElements => {
-		const configuration = {};
-		this.initCallWithVideo(videoElements.webRtcRemoteVideo, configuration);
-		this.initCallWithVideo(videoElements.webRtcRemoteVideo2, configuration);
+		if(!this.localStream){
+			this.setLocalStream()
+			.then(()=>{
+				this.initLocalPeer(videoElements.webRtcRemoteVideo);
+				this.initLocalPeer(videoElements.webRtcRemoteVideo2);
+			})
+		}
+		else{
+			this.initLocalPeer(videoElements.webRtcRemoteVideo);
+			this.initLocalPeer(videoElements.webRtcRemoteVideo2);
+		}
 	}
 
-	initCallWithVideo = (video, configuration) => {
-		/**
-		 * 1. Create local and remote peers
-		 * 2. Add some datas(ex. track, stream... etc)
-		 * 3. Create Offer with 2's data and answer with them
-		 */
-		let local, remote;
-		[local, remote] = this.createLocalAndRemotePeer(configuration);
-		remote.addEventListener('track', e=>this.onAddTrack(e,video));
+	/**
+	 * Always create new peer have to fix it.
+	 */
+	initLocalPeer = video => {
+		const local = new RTCPeerConnection();
+		local.video = video;
 		this.localStream.getTracks()
 		.forEach(track => {
 			local.addTrack(track, this.localStream);
 		});
-		this.createOfferAndAnswer(local, remote);
+		local.addEventListener('negotiationneeded', this.onNegotiationNeeded);
+		local.addEventListener('icecandidate', this.onIceCandidate);
+		this.webRtcPeers.set(local, null);
 	}
 
-	createLocalAndRemotePeer = (configuration) => {
-		const local = new RTCPeerConnection(configuration);
-		local.addEventListener('icecandidate', e=>e.candidate?remote.addIceCandidate(e.candidate):null);
-		const remote = new RTCPeerConnection(configuration);
-		remote.addEventListener('icecandidate', e=>e.candidate?local.addIceCandidate(e.candidate):null);
-		this.webRtcPeers.push({local:local, remote:remote})
-		return [local, remote];
-	}
-
-	createOfferAndAnswer = (local,remote) => {
+	onNegotiationNeeded = e => {
+		const local = e.target;
+		const remote = this.sendToOutBound(local);
 		local.createOffer()
-		.then(desc => {
-			local.setLocalDescription(desc);
-			remote.setRemoteDescription(desc);
-		})
+		.then(desc => local.setLocalDescription(desc))
+		.then(() => remote.setRemoteDescription(local.localDescription))
 		.then(() => {
 			remote.createAnswer()
-			.then(desc => {
-				local.setRemoteDescription(desc);
-				remote.setLocalDescription(desc);
-			});
-		});
+			.then(desc => remote.setLocalDescription(desc))
+			.then(() => local.setRemoteDescription(remote.localDescription));
+		})
+		this.webRtcPeers.set(local, remote);
+		this.webRtcPeers.set(remote, local);
+	}
+
+	onIceCandidate = e => {
+		const pc = this.webRtcPeers.get(e.target);
+		if(e.candidate){
+			pc.addIceCandidate(e.candidate);
+		}
+	}
+
+	sendToOutBound = remote => {
+		let local;
+		if(!this.outBoundPeers.get(remote)){
+			local = new RTCPeerConnection();
+			this.outBoundPeers.set(local, remote);
+			this.outBoundPeers.set(remote, local);
+		}
+		else{
+			local = this.webRtcPeers.get(remote);
+		}
+		local.addEventListener('track', e => this.onAddTrack(e, remote.video));
+		local.addEventListener('icecandidate', this.onIceCandidate);
+		return local;
 	}
 
 	onAddTrack = (e,video) => {
@@ -75,10 +92,10 @@ class WebRTCService{
 	}
 	
 	closeAllPeerConnection = () => {
-		this.webRtcPeers.forEach(peer => {
-			peer.local.close();
-			peer.remote.close();
-		})
-		this.webRtcPeers = [];
+		for(const [local, remote] of this.webRtcPeers){
+			local.close();
+			remote.close();
+		}
+		this.webRtcPeers.clear();
 	}
 }

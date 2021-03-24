@@ -30,6 +30,9 @@ class JsStudyPage extends HTMLElement{
         const div = document.createElement('div');
         div.style.height = "100vh";
         div.style.overflow = "auto";
+        /**
+         * TODO seperate divs and make contents list
+         */
         div.innerHTML = `
             <div id="mainContentTitle">
                 Javascript
@@ -122,6 +125,15 @@ class JsStudyPage extends HTMLElement{
                     <code>certbot certonly -d shindev.ml --manual --preferred-challenges dns</code>
                     명령어를 실행하면 아래와 같이 나오는데 dns 관리하는 곳으로 가서 해당하는 값으로 TXT 레코드 추가하면 된다.
                     <img src="static/img/certbotCmd.png"/>
+                </div>
+                <div>
+                    20210325
+                    <img src="static/img/formatData.png"/>
+                    nodejs에서 http to https redirect와 websocket 서버를 외부 모듈 없이 구축하였다.
+                    websocket 연결을 위해서 서버의 upgrade 이벤트를 바인딩하고 http 프로토콜을 이용한 websocket handshake을 구현하였으며
+                    초기 연결 확정을 위해 data frame을 buffer를 통하여 직접 구현하였다.
+                    MDN Web Docs에 설명이 잘 되어있어서 참고하였다.
+                    이제 이 websocket을 webRTC의 remote 부분 구현시 이용하면 된다.
                 </div>
             </div>
         `

@@ -5,7 +5,7 @@ const scripter = path => {
 		const module = document.createElement("script");
 		module.id = path;
 		module.src = staticFilePath + path;
-		document.body.appendChild(module);
+		document.head.appendChild(module);
 	}
 	window.addEventListener('load',()=>{
 		unscripter(path);
@@ -15,6 +15,6 @@ const scripter = path => {
 const unscripter = path => {
 	const module = document.getElementById(path);
 	if(module){
-		document.body.removeChild(module);
+		document.head.removeChild(module);
 	}
 }

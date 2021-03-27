@@ -1,1 +1,3 @@
 server/ssl/keys
+server/log
+server/pid

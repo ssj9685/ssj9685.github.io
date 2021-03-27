@@ -7,6 +7,9 @@ const https = require('https');
 const crypto=  require('crypto');
 const fs = require('fs');
 
+const Logger = require('./server/module/logger').Logger;
+const log = new Logger("./server/log").log;
+
 const options = {
 	key: fs.readFileSync('./server/ssl/keys/privkey1.pem'),
 	cert: fs.readFileSync('./server/ssl/keys/cert1.pem')
@@ -22,13 +25,17 @@ const httpsServer = https.createServer(options);
 
 httpsServer.on('request',onHttpsServerRequest);
 
-httpsServer.on('upgrade', onHttpsServerUpgarde)
+httpsServer.on('upgrade', onHttpsServerUpgarde);
 
-httpsServer.listen(443, () => console.log("Server running on port 443"));
+httpsServer.on('close', ()=>{
+	log("server closed").then(b=>process.exit(b));
+});
+
+httpsServer.listen(443, () => log("Server running on port 443"));
 
 function onHttpsServerRequest(req, res){
 	const {method, url} = req;
-	console.log(url);
+	log("req url:" + url);
 	if(method === 'GET'){
 		switch(url){
 			case '/':
@@ -85,10 +92,10 @@ function onHttpsServerUpgarde(req, res){
 					for(let i=0;i<4;++i)mask[i]=d[i+2];
 					const dec = Buffer.alloc(length);
 					for(let i=0;i<length;++i)dec[i] = d[i+6] ^ mask[i%4];
-					console.log(dec.toString('utf8'));
+					log(dec.toString('utf8'));
 				})
 				res.on('close',d=>{
-					console.log("websocket closed");
+					log("websocket closed");
 				})
 		
 				/**
@@ -101,7 +108,7 @@ function onHttpsServerUpgarde(req, res){
 			}
 			break;
 		default:
-			console.log("nope");
+			log("nope");
 	}
 }
 
@@ -110,7 +117,7 @@ function onHttpsServerUpgarde(req, res){
  */
 const http = require('http');
 http.createServer((req, res) => {
-	console.log("redirect");
+	log("redirect");
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
     res.end();
 }).listen(80);

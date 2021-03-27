@@ -29,6 +29,7 @@ class JsStudyPage extends HTMLElement{
         `
         const div = document.createElement('div');
         div.style.height = "100vh";
+        div.style.width = "100vw";
         div.style.overflow = "auto";
         /**
          * TODO seperate divs and make contents list

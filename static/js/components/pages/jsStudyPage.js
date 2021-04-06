@@ -8,6 +8,7 @@ scripter("components/pages/jsPages/20210322.js");
 scripter("components/pages/jsPages/20210323.js");
 scripter("components/pages/jsPages/20210325.js");
 scripter("components/pages/jsPages/20210328.js");
+scripter("components/pages/jsPages/20210407.js");
 
 
 class JsStudyPage extends HTMLElement{
@@ -15,17 +16,7 @@ class JsStudyPage extends HTMLElement{
         return [];
     }
     constructor(){
-        super();
-        customElements.define('js-20210204', Js20210204);
-        customElements.define('js-20210311',Js20210311);
-        customElements.define('js-20210317',Js20210317);
-        customElements.define('js-20210318',Js20210318);
-        customElements.define('js-20210320',Js20210320);
-        customElements.define('js-20210322',Js20210322);
-        customElements.define('js-20210323',Js20210323);
-        customElements.define('js-20210325',Js20210325);
-        customElements.define('js-20210328',Js20210328);
-        
+        super();        
         const shadow = this.attachShadow({mode: 'closed'});
         this.getShadow = () => shadow;
         const style = document.createElement('style');
@@ -68,13 +59,23 @@ class JsStudyPage extends HTMLElement{
                 <js-20210323></js-20210323>
                 <js-20210325></js-20210325>
                 <js-20210328></js-20210328>
+                <js-20210407></js-20210407>
             </div>
         `
         shadow.appendChild(style);
         shadow.appendChild(div);
     }
     connectedCallback() {
-        
+        customElements.define('js-20210204', Js20210204);
+        customElements.define('js-20210311',Js20210311);
+        customElements.define('js-20210317',Js20210317);
+        customElements.define('js-20210318',Js20210318);
+        customElements.define('js-20210320',Js20210320);
+        customElements.define('js-20210322',Js20210322);
+        customElements.define('js-20210323',Js20210323);
+        customElements.define('js-20210325',Js20210325);
+        customElements.define('js-20210328',Js20210328);
+        customElements.define('js-20210407',Js20210407);
     }
 
     disconnectedCallback() {

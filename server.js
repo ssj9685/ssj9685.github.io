@@ -93,6 +93,12 @@ function onHttpsServerUpgarde(req, res){
 					const dec = Buffer.alloc(length);
 					for(let i=0;i<length;++i)dec[i] = d[i+6] ^ mask[i%4];
 					log(dec.toString('utf8'));
+					
+					let sendBuf = Buffer.alloc(2);
+					sendBuf[0] = 0x81;
+					sendBuf[1] = dec.length
+					sendBuf = Buffer.concat([sendBuf, dec]);
+					res.write(sendBuf);
 				})
 				res.on('close',d=>{
 					log("websocket closed");

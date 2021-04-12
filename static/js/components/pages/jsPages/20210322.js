@@ -62,14 +62,13 @@ class Js20210322 extends HTMLElement{
         const createbtn = shadow.getElementById('createbtn');
 		const joinbtn = shadow.getElementById('joinbtn');
 		const hangupbtn = shadow.getElementById('hangupbtn');
-		const webRtcLocalVideo = shadow.getElementById('webRtcLocalVideo');
 		const webRtcRemoteVideo = shadow.getElementById('webRtcRemoteVideo');
         const webRtcRemoteVideo2 = shadow.getElementById('webRtcRemoteVideo2');
         const videoElements = {
             "webRtcRemoteVideo":webRtcRemoteVideo,
             "webRtcRemoteVideo2":webRtcRemoteVideo2
         };
-        createbtn.addEventListener('click', ()=>webRtc.localVideoStart(webRtcLocalVideo));
+        createbtn.addEventListener('click', ()=>webRtc.initPeer());
         joinbtn.addEventListener('click', ()=>webRtc.callToRemotePeer(videoElements));
         hangupbtn.addEventListener('click', webRtc.closeAllPeerConnection);
     }

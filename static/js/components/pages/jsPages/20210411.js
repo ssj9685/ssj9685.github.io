@@ -1,4 +1,4 @@
-class Js20210320 extends HTMLElement{
+class Js20210411 extends HTMLElement{
     static get observedAttributes() {
         return [];
     }
@@ -8,13 +8,14 @@ class Js20210320 extends HTMLElement{
         this.getShadow = () => shadow;
         const div = document.createElement('div');
         div.innerHTML = `
-            20210320
+            20210411
+           
+            utf-8과 utf-16에 대하여 공부하였다. 근데 결국 실수로 인한 삽질이였다.
+            websocket exchanging data format에 대하여 더욱 깊게 이해할 수 있었다.
 
-            전반적인 코드 리펙토링 및 webRTC 실습을 진행하였다.
-            현재는 local에 두 개의 peer를 연결했다.
-            더 나아가 stun, turn 서버를 구축하고 외부 주소와 peer를 연결하는 실습을 진행할 것이다.
         `
         shadow.appendChild(div);
+        this.webSocketEventHandler();
     }
     connectedCallback() {
         
@@ -32,4 +33,4 @@ class Js20210320 extends HTMLElement{
         
     }
 }
-customElements.define('js-20210320',Js20210320);
+customElements.define('js-20210411',Js20210411);

@@ -6,6 +6,7 @@ class Js20210407 extends HTMLElement{
         super();
         const shadow = this.attachShadow({mode: 'closed'});
         this.getShadow = () => shadow;
+        this.websocket = null;
         const div = document.createElement('div');
         div.innerHTML = `
             20210407
@@ -30,7 +31,7 @@ class Js20210407 extends HTMLElement{
     }
 
     disconnectedCallback() {
-        
+        this.websocket.close();
     }
 
     adoptedCallback() {
@@ -52,22 +53,19 @@ class Js20210407 extends HTMLElement{
             }
         };
         const wsConnect = () => {
-            let ws = new WebSocket("wss://shindev.ml/wss");
-            ws.addEventListener('open',()=>ws.send("connected!"));
-            ws.addEventListener('message',e=>{
-                alert(e.data);
-                console.log(e.data);
-            });
-            ws.addEventListener('error',e=>{
-                alert(e);
-            })
-            ws.addEventListener('close',()=>{
-                alert("reconnect...");
-                wsConnect();
-            });
-            wsSendMsgBtn.addEventListener('click',()=>{
-                ws.send(wsMsgText.value)
-            });
+            if(!this.websocket){
+                this.websocket = new WebSocket("wss://shindev.ml/wss");
+                this.websocket.addEventListener('open',()=>this.websocket.send("connected!"));
+                this.websocket.addEventListener('message',e=>{
+                    console.log(e.data);
+                });
+                this.websocket.addEventListener('error',e=>{
+
+                })
+                wsSendMsgBtn.addEventListener('click',()=>{
+                    this.websocket.send(wsMsgText.value)
+                });
+            }
         }
         wsConnect();
         wsMsgText.addEventListener('keydown',e=>{
@@ -97,3 +95,4 @@ class Js20210407 extends HTMLElement{
         })
     }
 }
+customElements.define('js-20210407',Js20210407);

@@ -48,3 +48,4 @@ class Js20210311 extends HTMLElement{
         })
     }
 }
+customElements.define('js-20210311',Js20210311);

@@ -31,9 +31,9 @@ class Js20210322 extends HTMLElement{
                     <video id="webRtcRemoteVideo2" playsinline autoplay muted></video>
                 </div>
                 <div style="display:flex;">
-                    <button id="webRtcStartButton">Start</button>
-                    <button id="webRtcCallButton">Call</button>
-                    <button id="webRtcHangupButton">Hang Up</button>
+                    <button id="createbtn">create</button>
+                    <button id="joinbtn">join</button>
+                    <button id="hangupbtn">Hang Up</button>
                 </div>
             </div>
         `
@@ -59,9 +59,9 @@ class Js20210322 extends HTMLElement{
     webRtcHandler = () => {
         const shadow = this.getShadow();
         const webRtc = window.webRtcService;
-        const webRtcStartButton = shadow.getElementById('webRtcStartButton');
-		const webRtcCallButton = shadow.getElementById('webRtcCallButton');
-		const webRtcHangupButton = shadow.getElementById('webRtcHangupButton');
+        const createbtn = shadow.getElementById('createbtn');
+		const joinbtn = shadow.getElementById('joinbtn');
+		const hangupbtn = shadow.getElementById('hangupbtn');
 		const webRtcLocalVideo = shadow.getElementById('webRtcLocalVideo');
 		const webRtcRemoteVideo = shadow.getElementById('webRtcRemoteVideo');
         const webRtcRemoteVideo2 = shadow.getElementById('webRtcRemoteVideo2');
@@ -69,8 +69,9 @@ class Js20210322 extends HTMLElement{
             "webRtcRemoteVideo":webRtcRemoteVideo,
             "webRtcRemoteVideo2":webRtcRemoteVideo2
         };
-        webRtcStartButton.addEventListener('click', ()=>webRtc.localVideoStart(webRtcLocalVideo));
-        webRtcCallButton.addEventListener('click', ()=>webRtc.callToRemotePeer(videoElements));
-        webRtcHangupButton.addEventListener('click', webRtc.closeAllPeerConnection);
+        createbtn.addEventListener('click', ()=>webRtc.localVideoStart(webRtcLocalVideo));
+        joinbtn.addEventListener('click', ()=>webRtc.callToRemotePeer(videoElements));
+        hangupbtn.addEventListener('click', webRtc.closeAllPeerConnection);
     }
 }
+customElements.define('js-20210322',Js20210322);

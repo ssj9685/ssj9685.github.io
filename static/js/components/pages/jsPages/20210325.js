@@ -34,3 +34,4 @@ class Js20210325 extends HTMLElement{
         
     }
 }
+customElements.define('js-20210325',Js20210325);

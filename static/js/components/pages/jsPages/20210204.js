@@ -33,3 +33,4 @@ class Js20210204 extends HTMLElement{
         
     }
 }
+customElements.define('js-20210204',Js20210204);

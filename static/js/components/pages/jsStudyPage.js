@@ -66,16 +66,7 @@ class JsStudyPage extends HTMLElement{
         shadow.appendChild(div);
     }
     connectedCallback() {
-        customElements.define('js-20210204', Js20210204);
-        customElements.define('js-20210311',Js20210311);
-        customElements.define('js-20210317',Js20210317);
-        customElements.define('js-20210318',Js20210318);
-        customElements.define('js-20210320',Js20210320);
-        customElements.define('js-20210322',Js20210322);
-        customElements.define('js-20210323',Js20210323);
-        customElements.define('js-20210325',Js20210325);
-        customElements.define('js-20210328',Js20210328);
-        customElements.define('js-20210407',Js20210407);
+
     }
 
     disconnectedCallback() {

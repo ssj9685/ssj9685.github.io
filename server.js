@@ -122,8 +122,8 @@ function websocketHandler(req, socket, clients=null){
 				sendBuf[3] = encoded[3];
 				sendBuf = Buffer.concat([sendBuf, decoded]);
 				for(const sock of clients.keys()){
-					if(socket !== sock){
-						socket.write(sendBuf);
+					if(socket!==sock){
+						sock.write(sendBuf);
 					}
 				}
 			}

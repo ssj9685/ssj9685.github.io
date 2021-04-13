@@ -1,28 +1,59 @@
 class WebRTCService{
 	constructor(){
 		this.localPeers = new Array();
+		this.targetPeer = null;
 		this.webSocket = new WebSocket("wss://shindev.ml/webrtc");
-		this.stream = navigator.mediaDevices.getUserMedia(
+		this.webSocket.addEventListener('message', this.onMessage);
+		this.stream = null;
+		navigator.mediaDevices.getUserMedia(
 			{
 				audio: true,
 				video: true
 			}
 		)
+		.then(stream => this.stream = stream);
+	}
+
+	onMessage = e => {
+		if(typeof e.data === "string"){
+			const message = JSON.parse(e.data);
+			if(message.type === "offer"){
+				this.targetPeer.setRemoteDescription(message);
+				this.targetPeer.createAnswer()
+				.then(description => {
+					this.targetPeer.setLocalDescription(description);
+					this.webSocket.send(JSON.stringify(description));
+				});
+			}
+			else if(message.type === "answer"){
+				this.targetPeer.setRemoteDescription(message);
+			} 
+			else if(message.ice){
+				this.targetPeer.addIceCandidate(message.ice).catch(e=>{
+					console.log("failaure: ",e.name);
+				});
+			}
+		}
 	}
 
 	initPeer = () => {
-		const pc = new RTCPeerConnection();
+		const pc = new RTCPeerConnection({
+			iceServers:[
+				{'urls': 'stun:stun.l.google.com:19302'}
+			]
+		});
 		this.localPeers.push(pc);
+		this.stream.getTracks()
+		.forEach(track => {
+			pc.addTrack(track, this.stream);
+		});
 		pc.addEventListener('icecandidate', this.onIceCandidate);
 		return pc;
 	}
 
 	createLocalPeer = () => {
 		const pc = this.initPeer();
-		this.stream.getTracks()
-		.forEach(track => {
-			pc.addTrack(track, this.stream);
-		});
+		pc.addEventListener('track', this.onAddTrack);
 		pc.addEventListener('negotiationneeded',this.localOnNegotiationNeeded);
 	}
 
@@ -35,51 +66,35 @@ class WebRTCService{
 	onAddTrack = e => {
 		const video = document.createElement('video');
 		document.body.appendChild(video);
+		video.style.cssText = "position:absolute;left:0;top:0;z-index:10000;width:auto;height:auto;"
+		video.id = "test";
 		video.playsInline = true;
-		video.muted = true;
-		video.autoplay = true;
 		if (video.srcObject !== e.streams[0]) {
 			video.srcObject = e.streams[0];
+			video.play();
 		}
 	}
 
 	localOnNegotiationNeeded = e => {
-		const pc = e.target;
-		pc.createOffer()
+		this.targetPeer = e.target;
+		this.targetPeer.createOffer()
 		.then(description => {
-			pc.setLocalDescription(description);
+			this.targetPeer.setLocalDescription(description);
 			this.webSocket.send(JSON.stringify(description));
-			this.webSocket.addEventListener('message',e=>{
-				if(typeof e.data === "string"){
-					const desc = JSON.parse(e.data);
-					if(desc.type === "answer"){
-						pc.setRemoteDescription(desc);
-					}
-				}
-			},{once:true});
 		});
 	}
 
 	remoteOnNegotiationNeeded = e => {
-		const pc = e.target;
-		this.webSocket.addEventListener('message',e=>{
-			if(typeof e.data === "string"){
-				const desc = JSON.parse(e.data);
-				if(desc.type === "offer"){
-					pc.setRemoteDescription(desc);
-					pc.createAnswer()
-					.then(description => {
-						pc.setLocalDescription(description);
-						this.webSocket.send(JSON.stringify(description));
-					});
-				}
-			}
-		},{once:true});
+		this.targetPeer = e.target;
 	}
 
 	onIceCandidate = e => {
+		this.targetPeer = e.target;
 		if(e.candidate){
 			this.webSocket.send(JSON.stringify({ice:e.candidate}));
+		}
+		else{
+			console.log('all ice sended')
 		}
 	}
 	

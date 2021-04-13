@@ -15,21 +15,12 @@ class Js20210322 extends HTMLElement{
             전체적인 peer connection의 생성과 동작을 일반화하였다.
             <div>
                 <style>
-                    video{
-                        --width:33%;
-                        width:var(--width);
-                        height:calc(var(--width) * 0.75);
-                    }
                     .flexAround{
                         display:flex;
                         justify-content:space-around;
                     }
                 </style>
-                <div class="flexAround">
-                    <video id="webRtcLocalVideo" playsinline autoplay muted></video>
-                    <video id="webRtcRemoteVideo" playsinline autoplay></video>
-                    <video id="webRtcRemoteVideo2" playsinline autoplay muted></video>
-                </div>
+                <div class="flexAround"></div>
                 <div style="display:flex;">
                     <button id="createbtn">create</button>
                     <button id="joinbtn">join</button>
@@ -62,14 +53,8 @@ class Js20210322 extends HTMLElement{
         const createbtn = shadow.getElementById('createbtn');
 		const joinbtn = shadow.getElementById('joinbtn');
 		const hangupbtn = shadow.getElementById('hangupbtn');
-		const webRtcRemoteVideo = shadow.getElementById('webRtcRemoteVideo');
-        const webRtcRemoteVideo2 = shadow.getElementById('webRtcRemoteVideo2');
-        const videoElements = {
-            "webRtcRemoteVideo":webRtcRemoteVideo,
-            "webRtcRemoteVideo2":webRtcRemoteVideo2
-        };
-        createbtn.addEventListener('click', ()=>webRtc.initPeer());
-        joinbtn.addEventListener('click', ()=>webRtc.callToRemotePeer(videoElements));
+        createbtn.addEventListener('click', webRtc.createLocalPeer);
+        joinbtn.addEventListener('click', webRtc.createRemotePeer);
         hangupbtn.addEventListener('click', webRtc.closeAllPeerConnection);
     }
 }

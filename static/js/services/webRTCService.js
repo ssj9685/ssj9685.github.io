@@ -69,9 +69,9 @@ class WebRTCService{
 		video.style.cssText = "position:absolute;left:0;top:0;z-index:10000;width:auto;height:auto;"
 		video.id = "test";
 		video.playsInline = true;
+		video.autoplay = true;
 		if (video.srcObject !== e.streams[0]) {
 			video.srcObject = e.streams[0];
-			video.play();
 		}
 	}
 
@@ -92,9 +92,6 @@ class WebRTCService{
 		this.targetPeer = e.target;
 		if(e.candidate){
 			this.webSocket.send(JSON.stringify({ice:e.candidate}));
-		}
-		else{
-			console.log('all ice sended')
 		}
 	}
 	

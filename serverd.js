@@ -7,7 +7,9 @@ const log = new Logger("./server/log").log;
  * Run on background process (daemon server)
  */
 const serverd = spawn(process.argv[0], ['server.js'], {
-  detached: true
+  detached: true,
+  stdio: false,
+  shell: true
 });
 
 log("open daemon with pid:" + serverd.pid);

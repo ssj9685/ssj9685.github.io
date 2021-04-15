@@ -2,7 +2,7 @@ class WebRTCService{
 	constructor(){
 		this.localPeers = new Array();
 		this.targetPeer = null;
-		this.webSocket = new WebSocket("wss://shindev.ml/webrtc");
+		this.webSocket = new WebSocket("wss://chat.yatata.xyz/webrtc");
 		this.webSocket.addEventListener('message', this.onMessage);
 		this.stream = null;
 		navigator.mediaDevices.getUserMedia(

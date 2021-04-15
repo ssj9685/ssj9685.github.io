@@ -54,7 +54,7 @@ class Js20210407 extends HTMLElement{
         };
         const wsConnect = () => {
             if(!this.websocket){
-                this.websocket = new WebSocket("wss://shindev.ml/wss");
+                this.websocket = new WebSocket("wss://chat.yatata.xyz/wss");
                 this.websocket.addEventListener('open',()=>this.websocket.send("connected!"));
                 this.websocket.addEventListener('message',e=>{
                     console.log(e.data);

@@ -8,7 +8,6 @@ const log = new Logger("./server/log").log;
  */
 const serverd = spawn(process.argv[0], ['server.js'], {
   detached: true,
-  stdio: false,
   shell: true
 });
 

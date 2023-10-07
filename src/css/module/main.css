@@ -1,0 +1,12 @@
+main {
+  & section {
+    min-height: 180px;
+    max-height: 500px;
+    min-width: 300px;
+    max-width: 500px;
+    width: 80%;
+  }
+
+  display: grid;
+  place-items: center;
+}

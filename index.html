@@ -71,6 +71,12 @@
       href="./resource/favicon-16x16.png"
     />
     <link rel="manifest" href="./resource/manifest.json" />
+    <link
+      rel="stylesheet"
+      href="./src/css/style.css"
+      media="print"
+      onload="this.media='all'"
+    />
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta
       name="msapplication-TileImage"
@@ -81,68 +87,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="ssj9685.github.io - ssj9685's blog" />
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        justify-content: space-between;
-        height: 100%;
-        font-size: 16px;
-        font-family: "Helvetica, sans-serif";
-        letter-spacing: -0.05rem;
-        line-height: 1.5rem;
-      }
-      body {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 80px 40px 1fr 24px;
-      }
-      header {
-        display: grid;
-        place-items: center;
-        text-align: center;
-      }
-      footer {
-        display: flex;
-        align-items: flex-end;
-        padding: 8px;
-      }
-      nav {
-        display: grid;
-        place-items: center;
-      }
-      ul {
-        display: flex;
-        min-width: 300px;
-        max-width: 500px;
-        width: 80%;
-        justify-content: space-around;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      main {
-        display: grid;
-        place-items: center;
-      }
-      main section {
-        min-height: 180px;
-        max-height: 500px;
-        min-width: 300px;
-        max-width: 500px;
-        width: 80%;
-      }
-      @media screen and (min-width: 768px) {
-        nav.profiles {
-          width: 100%;
-        }
-        .profiles img {
-          width: 20px;
-          height: 20px;
-        }
-      }
-    </style>
     <title>ssj9685</title>
   </head>
   <body>

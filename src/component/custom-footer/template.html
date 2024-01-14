@@ -5,5 +5,14 @@
     }
   </style>
 
-  <footer></footer>
+  <footer>
+    <span>&copy;</span>
+    <span id="year"></span>
+    <a href="https://github.com/ssj9685">ssj9685</a>
+    <span>All rights reserved.</span>
+  </footer>
+
+  <script>
+    shadow.querySelector("#year").innerHTML = new Date().getFullYear();
+  </script>
 </template>
